@@ -52,6 +52,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--hibernate-validator can come transitively by starter-jersey -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.2.5.Final</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
