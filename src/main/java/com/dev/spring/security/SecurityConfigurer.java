@@ -21,6 +21,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
+    @Autowired
+    private final JwtAuthnEntryPoint unauthorizedHandler;
+
+    public SecurityConfigurer(JwtAuthnEntryPoint unauthorizedHandler) {
+        this.unauthorizedHandler = unauthorizedHandler;
+    }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -38,6 +45,10 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/api/authenticate").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthorizedHandler) // hook to set forbidden to unauthorized, when jwt token not found
+//                .accessDeniedHandler(accessDeniedHandler())
+                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS); // why we use session in addition to jwt. so we set it stateless.
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // our filter execute before UsernamePasswordAuthenticationFilter
@@ -48,4 +59,13 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager(); // spring boot 2. it is required. in earlier release authentication manager created by default.
     }
+
+
+//    @Bean
+//    public AccessDeniedHandler accessDeniedHandler() {
+//        return (request, response, ex) -> {
+//            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+//        };
+//    }
+
 }

@@ -2,6 +2,7 @@ package com.dev.spring.config;
 
 import com.dev.spring.GreetingController;
 import com.dev.spring.HelloController;
+import com.dev.spring.exceptionmapper.GeneralExceptionMapper;
 import com.dev.spring.validation.BookResource;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +17,13 @@ import javax.ws.rs.ApplicationPath;
 public class JerseyConfig extends ResourceConfig {
 
     public JerseyConfig() {
+//        packages("com.dev.spring.exceptionmapper"); // already added JerseyExceptionMapperCustomizer
         register(HelloController.class);
         register(GreetingController.class);
         register(BookResource.class);
+
     }
+
+
+
 }

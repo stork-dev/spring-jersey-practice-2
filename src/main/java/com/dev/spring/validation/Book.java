@@ -7,17 +7,17 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 public class Book {
-    @Null(groups = ValidationGroups.Post.class)
-    @NotNull(groups = ValidationGroups.Put.class)
+    @Null(groups = ValidationGroups.Post.class, message="id is not required.")
+    @NotNull(groups = ValidationGroups.Put.class, message="id is required.")
     public Long id;
 
-    @NotBlank(message="Title may not be blank")
+    @NotBlank(message="title may not be blank.")
     public String title;
 
-    @NotBlank(message="Author may not be blank")
+    @NotBlank(message="author may not be blank.")
     public String author;
 
-    @Min(message="Author has been very lazy", value=1)
+    @Min(message="Author has been very lazy.", value=1)
     public double pages;
 
     public String getTitle() {

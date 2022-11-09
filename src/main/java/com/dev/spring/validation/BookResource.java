@@ -25,7 +25,7 @@ public class BookResource {
         if (violations.isEmpty()) {
             return new Result("Book is valid! It was validated by manual validation.");
         } else {
-            return new Result(violations);
+            throw new ConstraintViolationException(violations);
         }
     }
 
@@ -42,22 +42,18 @@ public class BookResource {
     @Path("/service-method-validation")
     @POST
     public Result tryMeServiceMethodValidation(Book book) {
-        try {
-            bookService.validateBook(book);
-            return new Result("Book is valid! It was validated by service method validation.");
-        } catch (ConstraintViolationException e) {
-            return new Result(e.getConstraintViolations());
-        }
+        bookService.validateBook(book);
+        return new Result("Book is valid! It was validated by service method validation.");
     }
 
-    @Path("/")
+    @Path("/post")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void post(@Valid @ConvertGroup(to = ValidationGroups.Post.class) Book book) {
         // ...
     }
 
-    @Path("/")
+    @Path("/put")
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void put(@Valid @ConvertGroup(to = ValidationGroups.Put.class) Book book) {

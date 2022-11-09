@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -43,15 +45,11 @@ public class HelloController {
 	@Path("/authenticate")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public AuthenticationResponse createAuthenticationToken(AuthenticationRequest request) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-					request.getUsername(), request.getPassword()
-			));
+	public AuthenticationResponse createAuthenticationToken(@Valid @NotNull(message = "No Payload") AuthenticationRequest request) throws Exception {
 
-		}catch (BadCredentialsException e){
-			throw new Exception("Incorrect username or password", e);
-		}
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+				request.getUsername(), request.getPassword()
+		)); // can throw runtime BadCredentialsException
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
 
